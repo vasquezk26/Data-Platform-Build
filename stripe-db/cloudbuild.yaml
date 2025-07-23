@@ -1,0 +1,24 @@
+steps:
+  # Install Terraform
+  - name: 'hashicorp/terraform:1.5.7'
+    entrypoint: 'sh'
+    secretEnv: ['TF_VAR_transaction_stripe_fivetran_db_password']
+    args:
+      - '-c'
+      - |
+        #!/usr/bin/env bash
+        set -e
+        cd stripe-db/$(echo ${PROJECT_ID} | sed 's/function-health-\(.*\)-env/\1/')
+        terraform init --reconfigure
+        terraform validate
+        terraform plan -out=tfplan
+        terraform apply -auto-approve tfplan
+        
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/transaction_stripe_fivetran_db_password/versions/latest
+      env: 'TF_VAR_transaction_stripe_fivetran_db_password'

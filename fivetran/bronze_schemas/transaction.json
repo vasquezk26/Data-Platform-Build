@@ -1,0 +1,147 @@
+{
+  "public": {
+    "enabled": true,
+    "tables": {
+      "alembic_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "audit_log": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "category": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "coupon": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "coupon_promotions": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "coupon_redemptions": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "customer": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "ezra_generic_code": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "ezra_products_code": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "ezra_purchase_detail": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "gift": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "gift_metadata": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "members": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "old-csv": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "order": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "ordermetadata": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "orderproduct": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_order_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_order_association_extra": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_order_metadata_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_orderproduct_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_product_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "payment_intent_statuses": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "product": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "product_category_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "product_productprovider": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "product_territory": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "productmetadata": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "productprice": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "productprovider": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "refund": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "refund_package_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "refund_product_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "subscription": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      }
+    }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "public": {
+    "enabled": true,
+    "tables": {
+      "alembic_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "biomarker": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "biomarker_reflex": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "biomarker_result": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "category": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "category_biomarker": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "cause": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "covid": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "critical": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "critical_result": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "disease": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "exercise": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "female_reproductive_health": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "food": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "medical_hx": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "motivational": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "package": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "package_panel": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "panel": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "panel_biomarker": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "panel_group": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "panel_group_panel": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_address": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_behavior_info": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "patient_contact_info": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "physician_note": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "physician_note_feedback": {
+        "enabled": false,
+        "sync_mode": "HISTORY"
+      },
+      "physician_note_ledger": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "physician_note_record": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "prior_pregnancy": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "recommendation_cause": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_disease": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "recommendation_exercise": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_food_to_avoid": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_food_to_eat": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_panel": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_selfcare": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_supplement": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "recommendation_symptom": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "requisition": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "requisition_comment": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "requisition_comment_log": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "requisition_group": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "requisition_visit": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "result": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "result_package": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "result_visit": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "selfcare": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "sex_specific": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "supplement": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "symptom": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "visit": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "visit_document": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "visit_meta_data": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      },
+      "visit_package": {
+        "enabled": true,
+        "sync_mode": "SOFT_DELETE"
+      }
+    }
+  }
+}

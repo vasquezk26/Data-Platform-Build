@@ -1,0 +1,10 @@
+POST https://datacatalog.googleapis.com/v1/projects/function-health-dev-env/locations/us-central1/taxonomies
+Content-Type: application/json
+Authorization: Bearer {{GCP_ACCESS_TOKEN}}
+
+{
+  "name": "dev-test",
+  "displayName": "Dev test",
+  "description": "This is a description",
+  "policyTagCount": 0
+}

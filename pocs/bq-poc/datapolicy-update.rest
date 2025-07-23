@@ -1,0 +1,13 @@
+PATCH https://bigquerydatapolicy.googleapis.com/v1/projects/function-health-dev-env/locations/us-central1/dataPolicies/another_test
+Content-Type: application/json
+Authorization: Bearer {{GCP_ACCESS_TOKEN}}
+
+{
+  "name": "projects/function-health-dev-env/locations/us-central1/dataPolicies/another_test",
+  "dataPolicyType": "DATA_MASKING_POLICY",
+  "dataPolicyId": "another_test",
+  "policyTag": "projects/1014551664922/locations/us-central1/taxonomies/6889184025470880311/policyTags/7734346376095517710",
+  "dataMaskingPolicy": {
+    "predefinedExpression": "ALWAYS_NULL"
+  }
+}

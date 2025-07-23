@@ -1,0 +1,132 @@
+# Substitutions are used to substitute specific variables at build time.
+# configuration defined in the Cloud Build web UI.
+substitutions:
+  _TERRAFORM_VERSION: 1.11.4
+  _TERRAFORM_DIR: ./
+  _TFLINT_VERSION: v0.57.0
+  _ENV: local
+  _DATABRICKS_WORKSPACE: "" # Optional, used for testing Terraform changes in an isolated workspace
+
+timeout: 6000s
+
+steps:
+  - id: terraform-check
+    name: 'hashicorp/terraform:${_TERRAFORM_VERSION}'
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_token"
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "🔨 INFO: Set up Terraform backend configuration..."
+      
+        terraform init -upgrade --reconfigure -backend-config=environments/${_ENV}/backend.conf
+        terraform validate
+
+        echo "🪛 INFO: Installing & running TFlint..."
+
+        apk add curl bash
+        curl -s "https://raw.githubusercontent.com/terraform-linters/tflint/refs/tags/${_TFLINT_VERSION}/install_linux.sh" | bash
+
+        # TODO: When all the other folders are linted, then do `cd ..` here and run tflint on the whole repo.
+        # cd ..
+        tflint --init
+        tflint --recursive --config "$(pwd)/.tflint.hcl"
+
+        echo "✅ SUCCESS: Terraform validation checked."
+
+  - id: terraform-plan
+    name: 'hashicorp/terraform:${_TERRAFORM_VERSION}'
+    waitFor:
+      - terraform-check
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_token"
+    args:
+      - '-c'
+      - |
+        set -e
+
+        if [[ -n "${_TERRAFORM_WORKSPACE}" ]]; then
+          if terraform workspace list | grep -q "${_TERRAFORM_WORKSPACE}"; then
+            echo "🚧 INFO: Using terraform workspace: ${_TERRAFORM_WORKSPACE} 🚧"
+            terraform workspace select "${_TERRAFORM_WORKSPACE}"
+          else
+            echo "🌟 INFO: Creating new terraform workspace: ${_TERRAFORM_WORKSPACE} 🌟"
+            terraform workspace new "${_TERRAFORM_WORKSPACE}"
+          fi
+        fi
+
+        echo "🔨 INFO: Running Terraform plan..."
+
+        terraform plan \
+          -no-color \
+          -var-file=environments/${_ENV}/terraform.tfvars \
+          -var "workspace_suffix=${_TERRAFORM_WORKSPACE}" \
+          -out="plan-${_ENV}.txt"
+
+        echo "✅ SUCCESS: Terraform plan completed."
+
+  - id: terraform-apply
+    name: hashicorp/terraform:${_TERRAFORM_VERSION}
+    waitFor:
+      - terraform-plan
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_token"
+    args:
+      - "-c"
+      - |
+        set -e
+
+        if [[ -n "${_BASE_BRANCH}" ]] || [[ -n "${_HEAD_BRANCH}" ]]; then
+          echo "⏩ SKIPPED: Terraform Apply is not configured to run on PRs."
+          exit 0
+        fi
+
+        if [[ -n "${_TERRAFORM_WORKSPACE}" ]]; then
+          if terraform workspace list | grep -q "${_TERRAFORM_WORKSPACE}"; then
+            echo "🚧 INFO: Using terraform workspace: ${_TERRAFORM_WORKSPACE} 🚧"
+            terraform workspace select "${_TERRAFORM_WORKSPACE}"
+          else
+            echo "🌟 INFO: Creating new terraform workspace: ${_TERRAFORM_WORKSPACE} 🌟"
+            terraform workspace new "${_TERRAFORM_WORKSPACE}"
+          fi
+        fi
+
+        echo "🔨 INFO: Running Terraform apply..."
+
+        terraform apply \
+          -no-color \
+          -auto-approve \
+          -var-file=environments/${_ENV}/terraform.tfvars \
+          -var "workspace_suffix=${_TERRAFORM_WORKSPACE}" \
+          plan-${_ENV}.txt
+
+        echo "✅ SUCCESS: Terraform apply completed."
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/fivetran_api_key/versions/latest
+      env: 'TF_VAR_fivetran_api_key'
+ 
+    - versionName: projects/${PROJECT_ID}/secrets/fivetran_api_secret/versions/latest
+      env: 'TF_VAR_fivetran_api_secret'
+
+    - versionName: projects/${PROJECT_ID}/secrets/databricks_token/versions/latest
+      env: 'TF_VAR_databricks_token'

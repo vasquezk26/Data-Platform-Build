@@ -1,0 +1,115 @@
+# Substitutions are used to substitute specific variables at build time.
+# configuration defined in the Cloud Build web UI.
+substitutions:
+  _TERRAFORM_VERSION: 1.11.4
+  _TERRAFORM_DIR: ./
+  _TFLINT_VERSION: v0.57.0
+  _ENV: local
+
+timeout: 6000s
+
+steps:
+  - id: terraform-check
+    name: 'hashicorp/terraform:${_TERRAFORM_VERSION}'
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_transaction_stripe_fivetran_db_password"
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_pat"
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "🔨 INFO: Set up Terraform backend configuration..."
+
+        terraform init --reconfigure -backend-config=environments/${_ENV}/backend.conf
+        terraform validate
+
+        echo "🪛 INFO: Installing & running TFlint..."
+
+        apk add curl bash
+        curl -s "https://raw.githubusercontent.com/terraform-linters/tflint/refs/tags/${_TFLINT_VERSION}/install_linux.sh" | bash
+
+        # TODO: When all the other folders are linted, then do `cd ..` here and run tflint on the whole repo.
+        # cd ..
+        tflint --init
+        tflint --recursive --config "$(pwd)/.tflint.hcl"
+
+        echo "✅ SUCCESS: Terraform validation checked."
+
+  - id: terraform-plan
+    name: 'hashicorp/terraform:${_TERRAFORM_VERSION}'
+    waitFor:
+      - terraform-check
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_transaction_stripe_fivetran_db_password"
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_pat"
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "🔨 INFO: Running Terraform plan..."
+
+        terraform plan \
+          -no-color \
+          -var-file=environments/${_ENV}/terraform.tfvars \
+          -out="plan-${_ENV}.txt"
+
+        echo "✅ SUCCESS: Terraform plan completed."
+
+  - id: terraform-apply
+    name: hashicorp/terraform:${_TERRAFORM_VERSION}
+    waitFor:
+      - terraform-plan
+    entrypoint: sh
+    dir: ${_TERRAFORM_DIR}
+    secretEnv:
+      - "TF_VAR_transaction_stripe_fivetran_db_password"
+      - "TF_VAR_fivetran_api_key"
+      - "TF_VAR_fivetran_api_secret"
+      - "TF_VAR_databricks_pat"
+    args:
+      - "-c"
+      - |
+        set -e
+
+        if [[ -n "${_BASE_BRANCH}" ]] || [[ -n "${_HEAD_BRANCH}" ]]; then
+          echo "⏩ SKIPPED: Terraform Apply is not configured to run on PRs."
+          exit 0
+        fi
+
+        echo "🔨 INFO: Running Terraform apply..."
+
+        terraform apply \
+          -no-color \
+          -auto-approve \
+          -var-file=environments/${_ENV}/terraform.tfvars \
+          plan-${_ENV}.txt
+
+        echo "✅ SUCCESS: Terraform apply completed."
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/transaction_stripe_fivetran_db_password/versions/latest
+      env: 'TF_VAR_transaction_stripe_fivetran_db_password'
+
+    - versionName: projects/${PROJECT_ID}/secrets/fivetran_api_key/versions/latest
+      env: 'TF_VAR_fivetran_api_key'
+ 
+    - versionName: projects/${PROJECT_ID}/secrets/fivetran_api_secret/versions/latest
+      env: 'TF_VAR_fivetran_api_secret'
+
+    - versionName: projects/${PROJECT_ID}/secrets/DATABRICKS_PAT_FOR_FIVETRAN/versions/latest
+      env: 'TF_VAR_databricks_pat'

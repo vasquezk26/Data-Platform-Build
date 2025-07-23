@@ -1,0 +1,23 @@
+{
+  "public": {
+    "enabled": true,
+    "tables": {
+      "access_code": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "access_code_entitlement": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "access_code_log": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "alembic_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      }
+    }
+  }
+}

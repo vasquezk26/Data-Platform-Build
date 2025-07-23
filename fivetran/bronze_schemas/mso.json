@@ -1,0 +1,31 @@
+{
+  "public": {
+    "enabled": true,
+    "tables": {
+      "alembic_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "cache": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "intercom_ticket_type": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "question_answer_pair": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "typeform_submit": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "user_action": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      }
+    }
+  }
+}

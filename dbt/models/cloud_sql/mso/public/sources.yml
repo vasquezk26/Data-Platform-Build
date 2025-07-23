@@ -1,0 +1,12 @@
+version: 2
+sources:
+  - name: mso
+    database: fh_bronze
+    schema: '{{ env_var(''_ENV'') }}_mso_public'
+    tables:
+      - name: alembic_version
+      - name: cache
+      - name: intercom_ticket_type
+      - name: question_answer_pair
+      - name: typeform_submit
+      - name: user_action

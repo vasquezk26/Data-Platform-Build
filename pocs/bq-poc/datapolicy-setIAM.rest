@@ -1,0 +1,24 @@
+POST https://bigquerydatapolicy.googleapis.com/v1/projects/function-health-dev-env/locations/us-central1/dataPolicies/another_test:setIamPolicy
+Content-Type: application/json
+Authorization: Bearer {{GCP_ACCESS_TOKEN}}
+
+{
+    "policy": {
+        "bindings": [
+            {
+                "members": [
+                    "user:zack.shapiro@functionhealth.com"
+                ],
+                "role": "roles/bigquerydatapolicy.maskedReader"
+            },
+            {
+                "members": [
+                    "domain:functionhealth.com"
+                ],
+                "role": "roles/bigquerydatapolicy.rawDataReader"
+            }
+        ],
+        "etag": "BwWWjb0YfJA=",
+        "version": 3
+    }
+}

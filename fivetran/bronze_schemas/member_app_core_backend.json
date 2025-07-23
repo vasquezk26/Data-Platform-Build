@@ -1,0 +1,175 @@
+{
+  "public": {
+    "enabled": true,
+    "tables": {
+      "agreement_configurations": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "alembic_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "answer": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "answer_linkages": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "app_version": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "condition": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "conditiongroup": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "credentials": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "device_token_credentials": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "device_tokens": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "entitlement": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "entitlement_configuration": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "feature": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "featureoperation": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "feedback_types": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "grail_patient_acknowledgment": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "impactenabledusers": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "impactreferral": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "impactuser": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_entitlement": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_entitlement_audit_trail": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_entitlement_cycle": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_entitlement_cycle_audit_trail": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_journey_variant": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "member_metadata_association": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "membertags": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "metadata": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "notification": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_agreement_audit": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_agreements": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_credentials": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_device_tokens": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patient_feedback": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patientmembership": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "patients": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "question": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "questionnaire": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "questionnaire_processing_jobs": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "referralcode": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "temporal_patient": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      },
+      "user_settings": {
+        "enabled": true,
+        "sync_mode": "HISTORY"
+      }
+    }
+  }
+}

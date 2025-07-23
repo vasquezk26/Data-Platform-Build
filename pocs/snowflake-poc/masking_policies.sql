@@ -1,0 +1,145 @@
+Begin;
+ALTER TABLE DEV_PATIENT MODIFY COLUMN ssn UNSET MASKING POLICY;
+ALTER TABLE raw.gcp_development_admin_backend_public.patient MODIFY COLUMN ssn UNSET MASKING POLICY;
+
+CREATE OR REPLACE MASKING POLICY ssn_masking_policy 
+  AS (val STRING) 
+  RETURNS STRING ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('ACCOUNTADMIN', 'PII_READER') THEN val
+      ELSE '<redacted>' -- 'XXX-XX-' || RIGHT(val, 4)
+    END;
+
+
+ALTER TABLE DEV_PATIENT
+MODIFY COLUMN ssn 
+SET MASKING POLICY ssn_masking_policy;
+
+ALTER TABLE raw.gcp_development_admin_backend_public.patient
+MODIFY COLUMN ssn 
+SET MASKING POLICY ssn_masking_policy;
+COMMIT;
+
+-- Date of Birth
+
+BEGIN;
+ALTER TABLE DEV_PATIENT MODIFY COLUMN dob UNSET MASKING POLICY;
+
+CREATE OR REPLACE MASKING POLICY dob_bucket_policy 
+  AS (val DATE) 
+  RETURNS DATE ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('ACCOUNTADMIN', 'PII_READER') THEN val
+      ELSE TIME_SLICE(val, 10, 'YEAR')
+    END;
+
+ALTER TABLE DEV_PATIENT
+MODIFY COLUMN dob 
+SET MASKING POLICY dob_bucket_policy;
+
+
+CREATE OR REPLACE MASKING POLICY dob_bucket_policy_varchar
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('ACCOUNTADMIN', 'PII_READER') THEN val
+      ELSE TIME_SLICE(try_cast(val as DATE), 10, 'YEAR')::VARCHAR
+    END;
+
+ALTER TABLE raw.gcp_development_admin_backend_public.patient
+MODIFY COLUMN dob 
+SET MASKING POLICY dob_bucket_policy_varchar;
+
+
+CREATE OR REPLACE MASKING POLICY name_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('ACCOUNTADMIN', 'PII_READER') THEN val
+      ELSE '<redacted>'
+    END;
+
+CREATE OR REPLACE MASKING POLICY gender_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('ACCOUNTADMIN', 'PII_READER') THEN val
+      ELSE '<gender>'
+    END;
+
+-- PII TAGS and Policies
+CREATE ROLE READ_PII_RESTRICTED;
+CREATE ROLE READ_PII_INTERNAL;
+GRANT ROLE READ_PII_INTERNAL TO ROLE READ_PII_RESTRICTED;
+
+CREATE OR REPLACE MASKING POLICY pii_restricted_varchar_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_PII_RESTRICTED') THEN val
+      ELSE '<redacted>'
+    END;
+CREATE OR REPLACE MASKING POLICY pii_restricted_date_masking_policy 
+  AS (val DATE) 
+  RETURNS DATE ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_PII_RESTRICTED') THEN val
+      ELSE '2000-01-01'::DATE
+    END;
+
+CREATE OR REPLACE MASKING POLICY pii_internal_varchar_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_PII_INTERNAL') THEN val
+      ELSE '<redacted>'
+    END;
+CREATE OR REPLACE MASKING POLICY pii_internal_date_masking_policy 
+  AS (val DATE) 
+  RETURNS DATE ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_PII_INTERNAL') THEN val
+      ELSE '1970-01-01'::DATE
+    END;
+
+-- HEALTH Tags and Policies
+CREATE ROLE READ_HEALTH_RESTRICTED;
+CREATE ROLE READ_HEALTH_INTERNAL;
+GRANT ROLE READ_HEALTH_INTERNAL TO ROLE READ_HEALTH_RESTRICTED;
+
+CREATE OR REPLACE MASKING POLICY health_restricted_varchar_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_HEALTH_RESTRICTED') THEN val
+      ELSE '<redacted>'
+    END;
+CREATE OR REPLACE MASKING POLICY health_restricted_date_masking_policy 
+  AS (val DATE) 
+  RETURNS DATE ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_HEALTH_RESTRICTED') THEN val
+      ELSE '1970-01-01'::DATE
+    END;
+
+CREATE OR REPLACE MASKING POLICY health_internal_varchar_masking_policy 
+  AS (val VARCHAR) 
+  RETURNS VARCHAR ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_HEALTH_INTERNAL') THEN val
+      ELSE '<redacted>'
+    END;
+CREATE OR REPLACE MASKING POLICY health_internal_date_masking_policy 
+  AS (val DATE) 
+  RETURNS DATE ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_HEALTH_INTERNAL') THEN val
+      ELSE '1970-01-01'::DATE
+    END;
+CREATE OR REPLACE MASKING POLICY health_internal_boolean_masking_policy 
+  AS (val BOOLEAN) 
+  RETURNS BOOLEAN ->
+    CASE
+      WHEN CURRENT_ROLE() IN ('READ_HEALTH_INTERNAL') THEN val
+      ELSE null
+    END;

@@ -1,0 +1,117 @@
+# Substitutions are used to substitute specific variables at build time.
+# configuration defined in the Cloud Build web UI.
+substitutions:
+  _DBT_CORE_VERSION: 1.10.3
+  _DBT_DIR: ./dbt/
+  _ENV: dev
+
+timeout: 6000s
+
+steps:
+  - id: generate-models-yml
+    name: python:3.12.11-slim
+    entrypoint: sh
+    dir: ./
+    args:
+      - '-c'
+      - |
+        set -e
+        echo "🔨 INFO: Generating models.yml files..."
+        
+        echo "🪛 INFO: Installing PyYAML..."
+        pip install PyYAML
+        
+        echo "🪛 INFO: Running admin_backend models.yml generation..."
+        python scripts/generate_admin_backend_models_yml.py
+        
+        echo "✅ SUCCESS: models.yml generation completed."
+
+  - id: dbt-compile
+    name: python:3.12.11-slim
+    waitFor:
+      - generate-models-yml
+#    name: ghcr.io/dbt-labs/dbt-core:${_DBT_CORE_VERSION}
+    entrypoint: sh
+    dir: ${_DBT_DIR}
+    env:
+      - _ENV=${_ENV}
+    secretEnv:
+      - "DBX_CLIENT_ID"
+      - "DBX_CLIENT_SECRET"
+    args:
+      - '-c'
+      - |
+        set -e
+        echo "🔨 INFO: Running dbt-core..."
+
+        echo "🪛 INFO: Installing poetry and python dependencies..."
+        pip install poetry
+        poetry install
+        poetry sync
+
+        echo "🪛 INFO: Installing dbt-core dependencies.yml..."
+        poetry run dbt deps
+
+        poetry run dbt --version
+        echo "✅ SUCCESS: dbt-core dependencies installed."
+
+        # echo "🪛 INFO: debug dbt..."
+        # poetry run dbt debug --profile testing --profiles-dir ./environments/${_ENV}/
+
+        echo "🪛 INFO: compiling dbt..."
+        poetry run dbt compile --profile testing --profiles-dir ./environments/${_ENV}/
+
+        # echo "🔨 INFO: Running dbt build..."
+        # poetry run dbt build --profile testing --profiles-dir ./environments/${_ENV}/
+
+        echo "✅ SUCCESS: dbt compile completed."
+
+  - id: dbt-run
+    name: python:3.12.11-slim
+    waitFor:
+      - dbt-compile
+    entrypoint: bash
+    dir: ${_DBT_DIR}
+    env:
+      - _ENV=${_ENV}
+    secretEnv:
+      - "DBX_CLIENT_ID"
+      - "DBX_CLIENT_SECRET"
+    args:
+      - "-c"
+      - |
+        set -e
+
+        if [[ -n "${_BASE_BRANCH}" ]] || [[ -n "${_HEAD_BRANCH}" ]]; then
+          echo "⏩ SKIPPED: dbt run is not configured to run on PRs."
+          exit 0
+        fi
+
+        echo "🔨 INFO: Running dbt run..."
+        echo "🪛 INFO: Installing poetry and python dependencies..."
+        pip install poetry
+        poetry install
+        poetry sync
+
+        echo "🪛 INFO: Installing dbt-core dependencies.yml..."
+        poetry run dbt deps
+
+        poetry run dbt --version
+        echo "✅ SUCCESS: dbt-core dependencies installed."
+
+        echo "🏃‍♂️ INFO: running dbt run..."
+        poetry run dbt run --profile testing --profiles-dir ./environments/${_ENV}/
+
+        echo "✅ SUCCESS: dbt run completed."
+
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/databricks_dbt_sp_client_id/versions/latest
+      env: 'DBX_CLIENT_ID'
+ 
+    - versionName: projects/${PROJECT_ID}/secrets/databricks_dbt_sp_secret/versions/latest
+      env: 'DBX_CLIENT_SECRET'

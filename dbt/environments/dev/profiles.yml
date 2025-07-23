@@ -1,0 +1,20 @@
+testing:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      catalog: silver
+      schema: dbt
+      host: 4308797823924795.5.gcp.databricks.com
+      http_path: /sql/1.0/warehouses/6fcecc0bdad0a4d1
+      auth_type: oauth
+      client_id: "{{ env_var('DBX_CLIENT_ID') }}"
+      client_secret: "{{ env_var('DBX_CLIENT_SECRET') }}"
+      threads: 1
+
+      # optional
+      connect_retries: 0 # default 0
+      connect_timeout: 10 # default: 10
+      retry_on_database_errors: False # default: false
+      retry_all: False  # default: false
+      reuse_connections: True

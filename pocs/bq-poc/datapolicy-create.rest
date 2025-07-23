@@ -1,0 +1,19 @@
+POST https://bigquerydatapolicy.googleapis.com/v1/projects/function-health-dev-env/locations/us-central1/dataPolicies/another_test
+Content-Type: application/json
+Authorization: Bearer {{GCP_ACCESS_TOKEN}}
+
+{
+  "name": "DEV Test from API",
+  "dataPolicyType": enum (DataPolicyType),
+  "dataPolicyId": "another_test",
+
+  // Union field matching_label can be only one of the following:
+  "policyTag": string
+  // End of list of possible types for union field matching_label.
+
+  // Union field policy can be only one of the following:
+  "dataMaskingPolicy": {
+    object (DataMaskingPolicy)
+  }
+  // End of list of possible types for union field policy.
+}

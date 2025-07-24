@@ -14,12 +14,12 @@
 module "databricks_destination_fh_bronze" {
   source = "./modules/databricks_destination"
 
-  destination_group_name = "${var.environment}_databricks_fh_bronze"
+  destination_group_name = "${var.environment}_databricks_bronze"
   databricks_host        = data.terraform_remote_state.databricks.outputs.fivetran_destination_sql_warehouse_host
-  databricks_catalog     = "fh_bronze"
+  databricks_catalog     = "bronze"
   databricks_http_path   = data.terraform_remote_state.databricks.outputs.fivetran_destination_sql_warehouse_http_path
   databricks_pat         = data.terraform_remote_state.databricks.outputs.pat_for_fivetran
-  external_location      = "gs://fh-bronze-database-datalake-${var.env}-fh"
+  external_location      = "gs://bronze-database-datalake-${var.env}"
 
   providers = {
     fivetran = fivetran

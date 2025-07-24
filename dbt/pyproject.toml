@@ -1,5 +1,5 @@
 [project]
-name = "fh-dbt"
+name = "demo-dbt"
 version = "0.1.0"
 description = ""
 authors = [

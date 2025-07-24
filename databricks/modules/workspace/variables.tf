@@ -35,7 +35,7 @@ variable "subnet_region" {
 variable "prefix" {
   description = "Prefix for naming resources"
   type        = string
-  default     = "fh-test-dbrx"
+  default     = "demo-dbrx"
 }
 
 variable "admin_group_name" {

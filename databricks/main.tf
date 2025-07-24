@@ -1,13 +1,13 @@
 # ----------------------------------------------------------------------------
 # Databricks resources
 # ----------------------------------------------------------------------------
-# Create a fh-test-<ENV>[-<terraform.workspace>] Databricks workspace
+# Create a demo-<ENV>[-<terraform.workspace>] Databricks workspace
 # By providing a `_TERRAFORM_WORKSPACE` environment variable to the build, you can create multiple test workspaces for the same environment.
 module "workspace" {
   source = "./modules/workspace"
 
   databricks_account_id  = var.databricks_account_id
-  workspace_display_name = var.workspace_suffix != "" ? "fh-test-${var.environment}-${var.workspace_suffix}" : "fh-test-${var.environment}"
+  workspace_display_name = var.workspace_suffix != "" ? "demo-${var.environment}-${var.workspace_suffix}" : "demo-${var.environment}"
   project_id             = var.project_id
   env                    = var.environment
   vpc_id                 = data.terraform_remote_state.devops_infra.outputs.vpc_name

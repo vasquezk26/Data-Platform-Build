@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "ext_bucket" {
-  name = "${var.prefix}-${var.env}-fh"
+  name = "${var.prefix}-${var.env}-demo"
 
   project       = var.google_project
   location      = var.google_region

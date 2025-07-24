@@ -14,7 +14,7 @@ resource "databricks_mws_networks" "this" {
 // create workspace in given VPC
 resource "databricks_mws_workspaces" "this" {
   account_id     = var.databricks_account_id
-  workspace_name = var.workspace_display_name # e.g. "fh-test-dev"
+  workspace_name = var.workspace_display_name # e.g. "demo-dev"
   location       = var.subnet_region
   cloud_resource_container {
     gcp {

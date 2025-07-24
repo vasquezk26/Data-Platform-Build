@@ -1,7 +1,7 @@
 resource "databricks_mws_networks" "this" {
   provider     = databricks.mws
   account_id   = var.databricks_account_id
-  network_name = "${var.workspace_display_name}-network" # The network name is derived from workspace_display_name, e.g., if workspace_display_name is "fh-test-dev", the network name will be "fh-test-dev-network".
+  network_name = "${var.workspace_display_name}-network" # The network name is derived from workspace_display_name, e.g., if workspace_display_name is "demo-dev", the network name will be "demo-dev-network".
   gcp_network_info {
     network_project_id = var.project_id
     vpc_id             = var.vpc_id
@@ -14,7 +14,7 @@ resource "databricks_mws_networks" "this" {
 resource "databricks_mws_workspaces" "this" {
   provider       = databricks.mws
   account_id     = var.databricks_account_id
-  workspace_name = var.workspace_display_name # e.g. "fh-test-dev"
+  workspace_name = var.workspace_display_name # e.g. "demo-dev"
   location       = var.subnet_region
   cloud_resource_container {
     gcp {

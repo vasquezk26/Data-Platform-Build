@@ -61,7 +61,7 @@ resource "google_datastream_stream" "default" {
   destination_config {
     destination_connection_profile = google_datastream_connection_profile.destination.id
     gcs_destination_config {
-      path                   = "gs://fh-dev-ai_datastream/dummy-db"
+      path                   = "gs://dev-ai_datastream/dummy-db"
       file_rotation_mb       = 200
       file_rotation_interval = "60s"
       json_file_format {

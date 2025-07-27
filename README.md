@@ -36,12 +36,12 @@ databricks:
   outputs:
     dev:
       type: databricks
-      catalog: fh_databricks_poc
+      catalog: databricks_poc
       schema: dbt_<username>
-      host: 3478918095650163.3.gcp.databricks.com
+      host: fakehostname.3.gcp.databricks.com
       http_path: /sql/1.0/warehouses/0556174cd69373a3
 #      auth_type: oauth
-#      client_id: <email address>@functionhealth.com
+#      client_id: <email address>@my_email.com
       auth_type: token
       token: <your token>
       threads: 1

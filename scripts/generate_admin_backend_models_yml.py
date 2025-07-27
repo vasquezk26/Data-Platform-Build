@@ -97,15 +97,20 @@ def generate_models_yml(table_columns: Dict[str, List[Dict]]) -> Dict:
     for table_name in sorted(table_columns.keys()):
         columns = table_columns[table_name]
         
-        # Convert table name to model name (remove admin_backend_ prefix if present)
-        model_name = table_name
+        # Convert table name to model name with stg__ prefix
+        model_name = f'stg__{table_name}'
+        alias_name = table_name
         if table_name == 'alembic_version':
-            model_name = 'admin_backend_alembic_version'
+            model_name = 'stg__admin_backend_alembic_version'
+            alias_name = 'admin_backend_alembic_version'
         
         # Create model structure
         model = {
             'name': model_name,
             'description': f'Model for {table_name} table from admin_backend database',
+            'config': {
+                'alias': alias_name
+            },
             'columns': []
         }
         
@@ -151,7 +156,7 @@ def main():
     repo_root = os.path.dirname(script_dir)
     
     csv_path = os.path.join(repo_root, 'fivetran', 'bronze_columns', 'admin_backend.csv')
-    output_path = os.path.join(repo_root, 'dbt', 'models', 'cloud_sql', 'admin_backend', 'public', 'models.yml')
+    output_path = os.path.join(repo_root, 'dbt', 'models', 'ai_chats', 'admin_backend', 'public', 'models.yml')
     
     # Check if CSV file exists
     if not os.path.exists(csv_path):

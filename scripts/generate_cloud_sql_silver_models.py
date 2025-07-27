@@ -51,7 +51,7 @@ def process_database(database='', bronze_catalog=''):
         table_sync_modes = fc.get_table_sync_modes(connection_id, schema_name)
 
         source_schema_name = destination_schema.rsplit("_", 1)[1] # e.g. source_schema_name = 'public'
-        models_dir = f"../dbt/models/cloud_sql/{database}/{source_schema_name}"
+        models_dir = f"../dbt/models/ai_chats/{database}/{source_schema_name}" if database == "admin_backend" else f"../dbt/models/cloud_sql/{database}/{source_schema_name}"
         os.makedirs(models_dir, exist_ok=True)
 
         sources_dict = {
@@ -78,7 +78,10 @@ def process_database(database='', bronze_catalog=''):
                     "Column": column_name
                     })
             
-            model_file_name = f"{database}_{table_name}" if table_name == 'alembic_version' else table_name
+            # Use dbt naming convention: stg__ prefix for model files, original name as alias
+            model_file_name = f"stg__{database}_{table_name}" if table_name == 'alembic_version' else f"stg__{table_name}"
+            alias_name = f"{database}_{table_name}" if table_name == 'alembic_version' else table_name
+            
             with open(f"{models_dir}/{model_file_name}.sql", "w") as f:
                 starter_select_column = "_fivetran_active" if table_sync_modes.get(table_name) == 'HISTORY' else '_fivetran_deleted'
                 where_clause = "_fivetran_active = True" if table_sync_modes.get(table_name) == 'HISTORY' else '_fivetran_deleted = False'

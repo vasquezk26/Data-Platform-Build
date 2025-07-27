@@ -52,6 +52,8 @@ models:
         public:
           +materialized: view
           +schema: db_mso
+
+    ai_chats:
       admin_backend:
         public:
           +materialized: view

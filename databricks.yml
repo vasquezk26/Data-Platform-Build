@@ -1,0 +1,90 @@
+bundle:
+  name: dbt-data-platform
+  
+variables:
+  catalog:
+    description: "Unity Catalog to use"
+    default: "fh_silver"
+  
+  schema_prefix:
+    description: "Schema prefix for environment"
+    default: "db"
+
+targets:
+  dev:
+    default: true
+    variables:
+      catalog: "fh_dev"
+      schema_prefix: "dev_db"
+    workspace:
+      host: ${DATABRICKS_DEV_HOST}
+      root_path: /Workspace/Repos/data-platform-infra-dev
+      
+  prod:
+    variables:
+      catalog: "fh_silver" 
+      schema_prefix: "db"
+    workspace:
+      host: ${DATABRICKS_PROD_HOST}
+      root_path: /Workspace/Repos/data-platform-infra-prod
+
+include:
+  - "./databricks/resources/*.yml"
+
+resources:
+  jobs:
+    dbt_hourly_job:
+      name: "DBT Hourly Models Execution - ${bundle.target}"
+      
+      job_clusters:
+        - job_cluster_key: dbt_cluster
+          new_cluster:
+            cluster_name: "dbt-hourly-${bundle.target}"
+            spark_version: "13.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+            data_security_mode: "USER_ISOLATION"
+            single_user_name: "dbt-${bundle.target}"
+            init_scripts:
+              - workspace:
+                  destination: "${workspace.root_path}/scripts/install_dbt.sh"
+            custom_tags:
+              purpose: "dbt-execution"
+              environment: "${bundle.target}"
+              team: "data-platform"
+      
+      tasks:
+        - task_key: "run_dbt_models"
+          description: "Execute dbt models hourly"
+          job_cluster_key: dbt_cluster
+          notebook_task:
+            notebook_path: "${workspace.root_path}/databricks/jobs/dbt_hourly/dbt_hourly_job"
+            base_parameters:
+              env: "${bundle.target}"
+              models: ""
+              skip_tests: "false"
+          timeout_seconds: 7200
+          max_retries: 2
+          min_retry_interval_millis: 300000
+      
+      schedule:
+        quartz_cron_expression: "0 * * * * ?"  # Every hour
+        timezone_id: "UTC"
+        pause_status: "UNPAUSED"
+      
+      email_notifications:
+        on_failure: 
+          - "data-platform@company.com"
+        on_success:
+          - "data-platform@company.com"
+        no_alert_for_skipped_runs: false
+      
+      access_control_list:
+        - service_principal_name: "dbt-${bundle.target}"
+          permission_level: "CAN_MANAGE_RUN"
+        - group_name: "admins"
+          permission_level: "CAN_MANAGE_RUN"
+      
+      timeout_seconds: 0
+      max_concurrent_runs: 1
+      format: "MULTI_TASK"

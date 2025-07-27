@@ -1,0 +1,13 @@
+{{
+  config(
+    alias='admin_backend_alembic_version'
+  )
+}}
+
+SELECT
+  _fivetran_active
+  -- , version_num
+FROM
+  {{ source('admin_backend', 'alembic_version') }}
+WHERE
+  _fivetran_active = True
